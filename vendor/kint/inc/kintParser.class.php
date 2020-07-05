@@ -462,7 +462,7 @@ abstract class kintParser extends kintVariableData
 			 */
 			if ( $key[0] === "\x00" ) {
 
-				$access = $key{1} === "*" ? "protected" : "private";
+				$access = $key[1] === "*" ? "protected" : "private";
 
 				// Remove the access level from the variable name
 				$key = substr( $key, strrpos( $key, "\x00" ) + 1 );

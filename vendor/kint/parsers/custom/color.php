@@ -90,8 +90,8 @@ class Kint_Parsers_Color extends kintParser
 			} else {
 				$colors = array(
 					$color[0] . $color[0],
-					$color{1} . $color{1},
-					$color{2} . $color{2},
+					$color[1] . $color[1],
+					$color[2] . $color[2],
 				);
 			}
 
