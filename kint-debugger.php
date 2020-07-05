@@ -3,10 +3,11 @@
  * Plugin Name: Kint Debugger
  * Plugin URI: https://strongplugins.com/
  * Description: Dump variables and traces in an organized and interactive display. Works with Debug Bar.
- * Version: 1.2
+ * Version: 2.0
  * Author: Brian Fegter, Chris Dillon
  * Author URI: https://strongplugins.com
- * Requires: 2.5 or higher
+ * GitHub Plugin URI: https://github.com/DuckDivers/kint-debugger
+ * Requires: 5.0
  * License: Dual license GPL-2.0+ & MIT (Kint is licensed MIT)
  *
  * Copyright 2012-2019 Brian Fegter (brian@fegter.com), Chris Wallace (chris@liftux.com), Chris Dillon (chris@strongwp.com)

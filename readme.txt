@@ -3,7 +3,7 @@ Contributors: misternifty, chriswallace, cdillon27
 Tags: debug, debugger, kint, print_r, var_dump, backtrace, debug_backtrace, trace, developer, debug bar, adopt-me
 Requires at least: 2.5
 Tested up to: 5.0
-Stable tag: 1.2
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
