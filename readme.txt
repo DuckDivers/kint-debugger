@@ -1,5 +1,5 @@
-=== Kint Debugger ===
-Contributors: misternifty, chriswallace, cdillon27
+=== Duck Kint Debugger ===
+Contributors: misternifty, chriswallace, cdillon27, thehowarde
 Tags: debug, debugger, kint, print_r, var_dump, backtrace, debug_backtrace, trace, developer, debug bar, adopt-me
 Requires at least: 2.5
 Tested up to: 5.0
