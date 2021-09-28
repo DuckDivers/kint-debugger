@@ -27,11 +27,13 @@ class Kint_Parsers_ClassMethods extends kintParser
 				foreach ( $method->getParameters() as $param ) {
 					$paramString = '';
 
-					if ( $param->isArray() ) {
+					if ( $param->getType() && $param->getType()->getName() === 'array' ) {
 						$paramString .= 'array ';
 					} else {
 						try {
-							if ( $paramClassName = $param->getClass() ) {
+							if ( $paramClassName = $param->getType() && !$param->getType()->isBuiltin()
+                                ? new ReflectionClass($param->getType()->getName())
+                                : null ) {
 								$paramString .= $paramClassName->name . ' ';
 							}
 						} catch ( ReflectionException $e ) {
