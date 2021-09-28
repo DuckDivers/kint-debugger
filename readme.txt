@@ -11,7 +11,7 @@ Dump variables and traces in an organized and interactive display. Integrates se
 
 == Description ==
 
-Updated for PHP 7.4
+Updated for PHP 8.0
 
 > This plugin is up for adoption.
 
