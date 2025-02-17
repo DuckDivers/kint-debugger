@@ -33,7 +33,7 @@
  * @since 1.1
  */
 function kint_debug_load_kint() {
-	require 'vendor/kint/Kint.class.php';
+    include 'includes/kint.phar';
 }
 add_action( 'plugins_loaded', 'kint_debug_load_kint' );
 
@@ -98,8 +98,7 @@ if ( ! defined( 'KINT_TO_DEBUG_BAR' ) || KINT_TO_DEBUG_BAR ) {
 		 * @return string
 		 */
 		function d() {
-			/** @noinspection PhpUndefinedClassInspection */
-			if ( ! Kint::enabled() ) {
+            if (!class_exists('Kint')) {
 				return '';
 			}
 			$_ = func_get_args();
