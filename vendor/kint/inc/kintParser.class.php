@@ -153,7 +153,7 @@ abstract class kintParser extends kintVariableData
 		self::$_level   = $revert['level'];
 		self::$_objects = $revert['objects'];
 
-		if ( strlen( $varData->name ) > 80 ) {
+		if ( null !== $varData->name && strlen( $varData->name ) > 80 ) {
 			$varData->name =
 				self::_substr( $varData->name, 0, 37 )
 				. '...'
