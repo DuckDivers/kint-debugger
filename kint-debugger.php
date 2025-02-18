@@ -3,8 +3,8 @@
  * Plugin Name: Duck Kint Debugger
  * Plugin URI: https://strongplugins.com/
  * Description: Dump variables and traces in an organized and interactive display. Works with Debug Bar.
- * Version: 2.0.1
- * Author: Brian Fegter, Chris Dillon
+ * Version: 2.1
+ * Author: Brian Fegter, Chris Dillon, Updated by Howard E
  * Author URI: https://strongplugins.com
  * GitHub Plugin URI: https://github.com/DuckDivers/kint-debugger
  * Requires: 5.0
