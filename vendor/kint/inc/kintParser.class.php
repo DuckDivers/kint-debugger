@@ -484,16 +484,42 @@ abstract class kintParser extends kintVariableData
 			if ( $property->isStatic() || isset( $encountered[ $name ] ) ) continue;
 
 			if ( $property->isProtected() ) {
-				$property->setAccessible( true );
+				if ( PHP_VERSION_ID < 80100 ) {
+					$property->setAccessible( true );
+				}
 				$access = "protected";
 			} elseif ( $property->isPrivate() ) {
-				$property->setAccessible( true );
+				if ( PHP_VERSION_ID < 80100 ) {
+					$property->setAccessible( true );
+				}
 				$access = "private";
 			} else {
 				$access = "public";
 			}
 
-			$value = $property->getValue( $variable );
+			if ( method_exists( $property, 'isInitialized' ) && ! $property->isInitialized( $variable ) ) {
+				$output           = new kintVariableData;
+				$output->type     = '*UNINITIALIZED*';
+				$output->access   = $access;
+				$output->name     = self::escape( $name );
+				$output->operator = '->';
+				$extendedValue[]  = $output;
+				$variableData->size++;
+				continue;
+			}
+
+			try {
+				$value = $property->getValue( $variable );
+			} catch ( ReflectionException $e ) {
+				$output           = new kintVariableData;
+				$output->type     = '*UNAVAILABLE*';
+				$output->access   = $access;
+				$output->name     = self::escape( $name );
+				$output->operator = '->';
+				$extendedValue[]  = $output;
+				$variableData->size++;
+				continue;
+			}
 
 			$output           = kintParser::factory( $value, self::escape( $name ) );
 			$output->access   = $access;

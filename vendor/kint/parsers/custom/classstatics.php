@@ -12,19 +12,38 @@ class Kint_Parsers_ClassStatics extends kintParser
 		// first show static values
 		foreach ( $reflection->getProperties( ReflectionProperty::IS_STATIC ) as $property ) {
 			if ( $property->isPrivate() ) {
-				if ( !method_exists( $property, 'setAccessible' ) ) {
+				if ( PHP_VERSION_ID < 80100 && !method_exists( $property, 'setAccessible' ) ) {
 					break;
 				}
-				$property->setAccessible( true );
+				if ( PHP_VERSION_ID < 80100 ) {
+					$property->setAccessible( true );
+				}
 				$access = "private";
 			} elseif ( $property->isProtected() ) {
-				$property->setAccessible( true );
+				if ( PHP_VERSION_ID < 80100 ) {
+					$property->setAccessible( true );
+				}
 				$access = "protected";
 			} else {
 				$access = 'public';
 			}
 
-			$_      = $property->getValue();
+			if ( method_exists( $property, 'isInitialized' ) && ! $property->isInitialized() ) {
+				$output         = new kintVariableData;
+				$output->type   = '*UNINITIALIZED*';
+				$output->name   = '$' . $property->getName();
+				$output->access = $access;
+				$output->operator = '::';
+				$extendedValue[] = $output;
+				continue;
+			} else {
+				try {
+					$_ = $property->getValue();
+				} catch ( ReflectionException $e ) {
+					$_ = '*UNAVAILABLE*';
+				}
+			}
+
 			$output = kintParser::factory( $_, '$' . $property->getName() );
 
 			$output->access   = $access;

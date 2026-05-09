@@ -4,6 +4,52 @@ class Kint_Parsers_ClassMethods extends kintParser
 {
 	private static $cache = array();
 
+	private static function _renderType( $type )
+	{
+		if ( ! $type ) {
+			return '';
+		}
+
+		if ( class_exists( 'ReflectionUnionType' ) && $type instanceof ReflectionUnionType ) {
+			$types = array();
+			foreach ( $type->getTypes() as $innerType ) {
+				$types[] = self::_renderType( $innerType );
+			}
+			return implode( '|', $types );
+		}
+
+		if ( class_exists( 'ReflectionIntersectionType' ) && $type instanceof ReflectionIntersectionType ) {
+			$types = array();
+			foreach ( $type->getTypes() as $innerType ) {
+				$types[] = self::_renderType( $innerType );
+			}
+			return implode( '&', $types );
+		}
+
+		if ( class_exists( 'ReflectionNamedType' ) && $type instanceof ReflectionNamedType ) {
+			$name = $type->getName();
+			if ( $type->allowsNull() && $name !== 'mixed' && $name !== 'null' ) {
+				$name = '?' . $name;
+			}
+			return $name;
+		}
+
+		return (string) $type;
+	}
+
+	private static function _renderDefaultValue( ReflectionParameter $param )
+	{
+		try {
+			if ( method_exists( $param, 'isDefaultValueConstant' ) && $param->isDefaultValueConstant() ) {
+				return $param->getDefaultValueConstantName();
+			}
+
+			return var_export( $param->getDefaultValue(), true );
+		} catch ( ReflectionException $e ) {
+			return '*UNAVAILABLE*';
+		}
+	}
+
 	protected function _parse( &$variable )
 	{
 		if ( !KINT_PHP53 || !is_object( $variable ) ) return false;
@@ -27,52 +73,26 @@ class Kint_Parsers_ClassMethods extends kintParser
 				foreach ( $method->getParameters() as $param ) {
 					$paramString = '';
 
-					if ( $param->getType() && $param->getType()->getName() === 'array' ) {
-						$paramString .= 'array ';
-					} else {
-						try {
-							if ( $paramClassName = $param->getType() && !$param->getType()->isBuiltin()
-                                ? new ReflectionClass($param->getType()->getName())
-                                : null ) {
-								$paramString .= $paramClassName->name . ' ';
-							}
-						} catch ( ReflectionException $e ) {
-							preg_match( '/\[\s\<\w+?>\s([\w]+)/s', $param->__toString(), $matches );
-							$paramClassName = isset( $matches[1] ) ? $matches[1] : '';
-
-							$paramString .= ' UNDEFINED CLASS (' . $paramClassName . ') ';
+					if ( method_exists( $param, 'getType' ) ) {
+						$type = self::_renderType( $param->getType() );
+						if ( $type !== '' ) {
+							$paramString .= $type . ' ';
 						}
 					}
 
-					$paramString .= ( $param->isPassedByReference() ? '&' : '' ) . '$' . $param->getName();
+					$paramString .= ( $param->isPassedByReference() ? '&' : '' )
+						. ( method_exists( $param, 'isVariadic' ) && $param->isVariadic() ? '...' : '' )
+						. '$' . $param->getName();
 
 					if ( $param->isDefaultValueAvailable() ) {
-						if ( is_array( $param->getDefaultValue() ) ) {
-							$arrayValues = array();
-							foreach ( $param->getDefaultValue() as $key => $value ) {
-								$arrayValues[] = $key . ' => ' . $value;
-							}
-
-							$defaultValue = 'array(' . implode( ', ', $arrayValues ) . ')';
-						} elseif ( $param->getDefaultValue() === null ) {
-							$defaultValue = 'NULL';
-						} elseif ( $param->getDefaultValue() === false ) {
-							$defaultValue = 'false';
-						} elseif ( $param->getDefaultValue() === true ) {
-							$defaultValue = 'true';
-						} elseif ( $param->getDefaultValue() === '' ) {
-							$defaultValue = '""';
-						} else {
-							$defaultValue = $param->getDefaultValue();
-						}
-
-						$paramString .= ' = ' . $defaultValue;
+						$paramString .= ' = ' . self::_renderDefaultValue( $param );
 					}
 
 					$params[] = $paramString;
 				}
 
 				$output = new kintVariableData;
+				$docBlock = false;
 
 				// Simple DocBlock parser, look for @return
 				if ( ( $docBlock = $method->getDocComment() ) ) {

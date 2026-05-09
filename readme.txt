@@ -3,7 +3,7 @@ Contributors: misternifty, chriswallace, cdillon27, thehowarde
 Tags: debug, debugger, kint, print_r, var_dump, backtrace, debug_backtrace, trace, developer, debug bar, adopt-me
 Requires at least: 2.5
 Tested up to: 5.6
-Stable tag: 2.0
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,7 +11,7 @@ Dump variables and traces in an organized and interactive display. Integrates se
 
 == Description ==
 
-Updated for PHP 8.0
+Updated for PHP 8.3+
 
 > This plugin is up for adoption.
 

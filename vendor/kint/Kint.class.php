@@ -161,6 +161,7 @@ class Kint
 				? debug_backtrace( DEBUG_BACKTRACE_IGNORE_ARGS )
 				: debug_backtrace()
 		);
+		$modifiers        = (string) $modifiers;
 		$modeOldValue     = self::enabled();
 		$firstRunOldValue = self::$_firstRun;
 

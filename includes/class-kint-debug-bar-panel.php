@@ -3,7 +3,7 @@
  * Class Kint_Debug_Bar_Panel
  */
 class Kint_Debug_Bar_Panel extends Debug_Bar_Panel {
-	var $_visible = true;
+	public $_visible = true;
 
 	function title( $title = null ) {
 		return __( 'Kint Debugger' );
